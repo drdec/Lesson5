@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HomeWork
 {
@@ -38,49 +39,31 @@ namespace HomeWork
 
             Console.WriteLine("Задание 3");
             {
-                bool cz = true;
-                int n = 0;
+                Console.WriteLine("Введите количество чисел, которое вы хотите ввести");
+                int n = Convert.ToInt32(Console.ReadLine());
 
-                while (cz)
-                {
-                    Console.WriteLine("Введите количесво чисел, которое вы хотите ввести");
-                    n = Convert.ToInt32(Console.ReadLine());
+                string arrayNumer = "";
 
-                    if (n >= 0)
-                    {
-                        cz = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Количество чисел должно быть больше нуля.");
-                    }
-                }
-
-                byte[] userData = new byte[n];
-
-                Console.WriteLine("Пожалуйста, введите числа от 0 до 255");
-
-                for (int i = 0; i < userData.Length; i++)
+                for (int i = 0; i < n; i++)
                 {
                     int tempNumber = Convert.ToInt32(Console.ReadLine());
 
-                    if (tempNumber > 0 && tempNumber < 256)
+                    if (tempNumber >= 0 && tempNumber <= 255)
                     {
-                        userData[i] = (byte)tempNumber;
+                        arrayNumer += tempNumber + " ";
                     }
                     else
                     {
-                        Console.WriteLine("пожалуйста, проверьте диапазон чисел и ваше число, после повторите попытку.");
+                        Console.WriteLine("Вы вышли за диапозон знначений, пожалуйста, проверьте правильность ввода");
                         i--;
                     }
                 }
 
-                for (int i = 0; i < userData.Length; i++)
-                {
-                    Console.Write(userData[i] + " ");
-                }
+                BinaryFormatter formatter = new();
 
-                File.WriteAllBytes("readme.bin", userData);
+                formatter.Serialize(new FileStream("numbers.bin", FileMode.OpenOrCreate), arrayNumer);
+
+                Console.WriteLine("Запись в файл была успешно проведена");
             }
         }
     }
